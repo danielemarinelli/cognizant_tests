@@ -39,7 +39,7 @@ public class RunTestSuite extends TestBase{
 
     }
 
-    @Test(priority=3,description="This test checks the industries footer")
+    //@Test(priority=3,description="This test checks the industries footer")
     public void checkIndustriesFooter() throws Exception {
         initPage = new InitialPage(driver());
         int footerInd = initPage.footerIndustries();
@@ -55,7 +55,8 @@ public class RunTestSuite extends TestBase{
     @Test(priority=4,description="This test checks the customer info sending")
     public void checkSentCustomerInfo() throws Exception {
         initPage = new InitialPage(driver());
-        initPage.customerRequest();
+        String error = initPage.customerRequest();
+        Assert.assertEquals(error,"Please Enter Valid Contact Number");
         System.out.println("fine test....");
     }
     
