@@ -1,6 +1,7 @@
 package Pages;
 
 import Tests.TestBase;
+import core.ExcelDataProviderCustomerInfo;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -12,7 +13,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public class InitialPage extends TestBase {
 
@@ -53,18 +56,41 @@ public class InitialPage extends TestBase {
     @FindBy(xpath =".//span[@class='result-count']")
     private WebElement numberJobs;
 
-    //@FindBy(xpath ="(.//div[@class='col-sm-4'])[1]//li/a/ppc-content")
     @FindBy(xpath ="(.//div[@class='columns'])[2]//a")
     private List<WebElement> industries1;
 
-    //@FindBy(xpath ="(.//div[@class='col-sm-4'])[2]//li/a/ppc-content")
     @FindBy(xpath ="(.//div[@class='columns'])[3]//a")
     private List<WebElement> industries2;
 
-    //@FindBy(xpath ="(.//div[@class='col-sm-4'])[3]//li/a/ppc-content")
     @FindBy(xpath ="(.//div[@class='columns'])[4]//a")
     private List<WebElement> industries3;
 
+    @FindBy(xpath =".//span[text()='TAKE THE FIRST STEP']")
+    private WebElement titleHalfPage;
+
+    @FindBy(xpath =".//input[@id='firstname']")
+    private WebElement fieldName;
+
+    @FindBy(xpath =".//input[@id='emailid']")
+    private WebElement fieldEmail;
+
+    @FindBy(xpath =".//input[@id='organisation']")
+    private WebElement fieldOrganization;
+
+    @FindBy(xpath =".//input[@id='contact']")
+    private WebElement fieldContactNumber;
+
+    @FindBy(xpath =".//select[@id='region']")
+    private WebElement fieldRegion;
+
+    @FindBy(xpath =".//select[@id='enquiry']")
+    private WebElement fieldEnquiry;
+
+    @FindBy(xpath =".//textarea[@id='msg']")
+    private WebElement fieldMsg;
+
+
+    List<Map<String,String>> allDataFromCustomerInfoFile;
     private WebDriver driver;
     public InitialPage(WebDriver driver){
         this.driver=driver;
@@ -77,21 +103,6 @@ public class InitialPage extends TestBase {
         //return driver.getTitle();
         return s;
                  }
-
-    public String getCurrentWindow(){
-        return driver.getWindowHandle();
-    }
-
- /*   public int languages(){
-        Select languagesList = new Select(languageOnSite);
-        List<WebElement> allLanguages = languagesList.getOptions();
-        for(WebElement language:allLanguages){
-            System.out.println(language.getText());
-        }
-        System.out.println("There are "+allLanguages.size()+" languages you can pick");
-        int numberLanguages = allLanguages.size();
-        return numberLanguages;
-    }*/
 
     public int clickCareersSection() throws InterruptedException {
         System.out.println("Click Cancel on pop-up!!!");
@@ -151,5 +162,33 @@ public class InitialPage extends TestBase {
         int total = industries1.size() + industries2.size() +industries3.size();
         return total;
     }
+
+    public void customerRequest() throws Exception {
+        allDataFromCustomerInfoFile=ExcelDataProviderCustomerInfo.getTestDataFromCustomerInfoFile();
+        System.out.println("Rows in excel file: "+allDataFromCustomerInfoFile.size());
+        System.out.println("---->>> "+allDataFromCustomerInfoFile.get(4).get("ORGANIZATION"));
+        //insert data of ROW 5 in web fields.....
+        JavascriptExecutor je = (JavascriptExecutor) driver;
+        je.executeScript("arguments[0].scrollIntoView(true);",titleHalfPage);
+        fieldName.click();
+        fieldName.sendKeys(allDataFromCustomerInfoFile.get(4).get("NAME"));
+        fieldEmail.click();
+        fieldEmail.sendKeys(allDataFromCustomerInfoFile.get(4).get("EMAIL"));
+        fieldOrganization.click();
+        fieldOrganization.sendKeys(allDataFromCustomerInfoFile.get(4).get("ORGANIZATION"));
+        fieldContactNumber.click();
+        fieldContactNumber.sendKeys(allDataFromCustomerInfoFile.get(4).get("CONTACT NUMBER"));
+        fieldRegion.click();
+        Select region = new Select(fieldRegion);
+        region.selectByVisibleText(allDataFromCustomerInfoFile.get(4).get("REGION"));
+        fieldEnquiry.click();
+        Select enquiry = new Select(fieldEnquiry);
+        enquiry.selectByVisibleText(allDataFromCustomerInfoFile.get(4).get("INQUIRY TYPE"));
+        fieldMsg.click();
+        fieldMsg.sendKeys(allDataFromCustomerInfoFile.get(4).get("MESSAGE"));
+        System.out.println();
+
+    }
+
 
 }

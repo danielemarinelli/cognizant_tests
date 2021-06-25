@@ -12,7 +12,7 @@ public class RunTestSuite extends TestBase{
     InitialPage initPage;
     TestReporter test;
 
-    //@Test(priority=1,description="This test checks the initial web page")
+    @Test(priority=1,description="This test checks the initial web page")
     public void checkInitialPage() throws Exception {
         initPage = new InitialPage(driver());
         //Assert.assertEquals(initPage.logoCheck(),"Cognizant Technology Solutions",
@@ -39,7 +39,7 @@ public class RunTestSuite extends TestBase{
 
     }
 
-    //@Test(priority=3,description="This test checks the industries footer")
+    @Test(priority=3,description="This test checks the industries footer")
     public void checkIndustriesFooter() throws Exception {
         initPage = new InitialPage(driver());
         int footerInd = initPage.footerIndustries();
@@ -50,6 +50,13 @@ public class RunTestSuite extends TestBase{
         }else{
             test.report(LogStatus.FAIL, "step3", "Cognizant industries in footer", true);
         }
+    }
+
+    @Test(priority=4,description="This test checks the customer info sending")
+    public void checkSentCustomerInfo() throws Exception {
+        initPage = new InitialPage(driver());
+        initPage.customerRequest();
+        System.out.println("fine test....");
     }
     
 }
